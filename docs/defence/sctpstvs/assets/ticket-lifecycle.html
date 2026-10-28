@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- Source for ticket-lifecycle.png. Render: Chrome headless, 1340x560 window, device scale 2. -->
+<html><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1340px; height: 560px; background: #fff; font-family: "Helvetica Neue", Arial, sans-serif; color: #16212E; position: relative; }
+  .box { position: absolute; border: 2px solid #C9D1D9; border-radius: 12px; background: #fff; text-align: center; padding: 14px 12px; }
+  .box b { display: block; font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+  .box span { display: block; font-size: 17px; color: #4B5563; line-height: 1.4; }
+  .start { background: #F1F4F7; }
+  .ok { background: #DCEFEC; border: 3px solid #0F766E; }
+  .end { background: #F1F4F7; }
+  .lbl { position: absolute; font-size: 16px; color: #374151; line-height: 1.35; }
+  svg { position: absolute; left: 0; top: 0; }
+</style></head><body>
+<div class="box start" style="left:30px; top:200px; width:250px; height:150px"><b>Bought</b><span>fare taken from wallet;<br>signed token and<br>backup code issued</span></div>
+<div class="box" style="left:420px; top:200px; width:250px; height:150px"><b>Active</b><span>valid for 2 hours<br>(TICKET_TTL_MINUTES)</span></div>
+<div class="box ok" style="left:860px; top:20px; width:440px; height:140px"><b>Redeemed (used)</b><span>first scan wins: one guarded UPDATE;<br>later scans show ALREADY USED</span></div>
+<div class="box end" style="left:860px; top:205px; width:440px; height:140px"><b>Expired</b><span>past its expiry: shows EXPIRED,<br>is never marked used, can be refunded</span></div>
+<div class="box end" style="left:860px; top:390px; width:440px; height:140px"><b>Refunded</b><span>admin returns the fare to the wallet<br>once; a later scan shows INVALID</span></div>
+<div class="lbl" style="left:575px; top:62px; width:260px">conductor scans it on the right route</div>
+<div class="lbl" style="left:700px; top:248px; width:150px">time runs out</div>
+<div class="lbl" style="left:620px; top:432px; width:240px">admin refunds an unused ticket</div>
+<div class="lbl" style="left:420px; top:480px; width:300px">Wrong route: shows WRONG ROUTE and the ticket stays active.</div>
+<svg width="1340" height="560">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8A96A3"/></marker></defs>
+  <g stroke="#8A96A3" stroke-width="2.5" fill="none">
+    <path d="M282 275 H416" marker-end="url(#a)"/>
+    <path d="M545 198 V90 H856" marker-end="url(#a)"/>
+    <path d="M672 275 H856" marker-end="url(#a)"/>
+    <path d="M600 352 V460 H856" marker-end="url(#a)"/>
+    <path d="M1080 347 V386" marker-end="url(#a)"/>
+  </g>
+</svg>
+</body></html>

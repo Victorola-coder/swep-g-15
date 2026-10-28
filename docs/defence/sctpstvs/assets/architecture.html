@@ -1,0 +1,57 @@
+<!doctype html>
+<!-- Source for architecture.png. Render: Chrome headless, 1340x970 window, device scale 2 (see build notes in build-report.js). -->
+<html><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1340px; height: 970px; background: #fff; font-family: "Helvetica Neue", Arial, sans-serif; color: #16212E; position: relative; }
+  h1 { position: absolute; left: 42px; top: 26px; font-size: 27px; font-weight: 500; }
+  .box { position: absolute; border: 2px solid #C9D1D9; border-radius: 12px; background: #fff; text-align: center; padding: 14px 12px; }
+  .box b { display: block; font-size: 23px; font-weight: 600; margin-bottom: 7px; }
+  .box span { display: block; font-size: 18px; color: #4B5563; line-height: 1.45; }
+  .hl { background: #DCEFEC; border: 3px solid #0F766E; }
+  .group { position: absolute; border: 2px solid #D5DBE1; border-radius: 14px; background: #F1F4F7; }
+  .group > i { position: absolute; left: 26px; top: 16px; font-style: normal; font-size: 22px; font-weight: 600; }
+  .note { position: absolute; font-size: 17px; color: #4B5563; line-height: 1.45; }
+  .chip { position: absolute; height: 46px; border: 2px solid #C9D1D9; border-radius: 10px; background: #fff; font: 600 18px "Menlo", monospace; display: flex; align-items: center; justify-content: center; }
+  .chip.hl { border: 3px solid #0F766E; background: #DCEFEC; }
+  .lbl { position: absolute; font-size: 17px; color: #4B5563; background: #fff; padding: 0 6px; }
+  svg { position: absolute; left: 0; top: 0; }
+</style></head><body>
+<h1>Tickets are signed on the server and used up once in the database</h1>
+
+<div class="box" style="left:40px; top:84px; width:390px; height:118px"><b>Student phone</b><span>wallet, top-up, buy a ticket,<br>QR ticket and backup code</span></div>
+<div class="box" style="left:475px; top:84px; width:390px; height:118px"><b>Conductor phone</b><span>camera scanner or typed code;<br>VALID / ALREADY USED screens</span></div>
+<div class="box" style="left:910px; top:84px; width:390px; height:118px"><b>Admin browser</b><span>sales, tickets and refunds,<br>fraud log, fares, vehicles</span></div>
+
+<div class="lbl" style="left:690px; top:222px">HTTPS, JSON, session cookie</div>
+
+<div class="group" style="left:40px; top:262px; width:1260px; height:326px"><i>On the server: Next.js app (Vercel)</i></div>
+<div class="box" style="left:70px; top:316px; width:355px; height:160px"><b>API routes</b><span>/api/auth, /api/wallet, /api/tickets,<br>/api/verify, /api/admin<br>role checks, same-origin check</span></div>
+<div class="box hl" style="left:495px; top:316px; width:355px; height:160px"><b>Ticket and wallet logic</b><span>fare read from the database,<br>row locks, conditional UPDATE,<br>refunds, fraud log</span></div>
+<div class="box" style="left:920px; top:316px; width:355px; height:160px"><b>Ed25519 signing key</b><span>SIGNING_PRIVATE_KEY<br>signs each SCT1 token;<br>public key at /api/public-key</span></div>
+<div class="note" style="left:72px; top:500px; width:1180px">Rate limits: 5 sign-ins per account and 30 per IP address every 15 minutes; 30 checks per conductor per minute.<br>The server keeps no state in memory or files, so several instances can run at once.</div>
+
+<div class="lbl" style="left:690px; top:607px">SQL over the Supabase Transaction pooler (port 6543)</div>
+
+<div class="group" style="left:40px; top:646px; width:1260px; height:300px"><i>Database: PostgreSQL on Supabase, schema sctpstvs</i></div>
+<div class="chip" style="left:70px;  top:700px; width:280px">users</div>
+<div class="chip" style="left:375px; top:700px; width:280px">sessions</div>
+<div class="chip" style="left:680px; top:700px; width:280px">routes</div>
+<div class="chip" style="left:985px; top:700px; width:285px">vehicles</div>
+<div class="chip hl" style="left:70px;  top:764px; width:280px">tickets</div>
+<div class="chip hl" style="left:375px; top:764px; width:280px">ledger</div>
+<div class="chip" style="left:680px; top:764px; width:280px">fraud_log</div>
+<div class="chip" style="left:985px; top:764px; width:285px">rate_limit_hits</div>
+<div class="note" style="left:72px; top:834px; width:1190px"><b style="color:#16212E">tickets:</b> status changes from active to redeemed only through one guarded UPDATE.<br><b style="color:#16212E">ledger:</b> append-only (triggers block UPDATE, DELETE, TRUNCATE) and no balance below zero.<br>Locally and in tests the same SQL runs on PGlite, Postgres inside Node.js.</div>
+
+<svg width="1340" height="970">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A96A3"/></marker></defs>
+  <g stroke="#8A96A3" stroke-width="2.5" fill="none">
+    <path d="M235 202 V258" marker-start="url(#a)" marker-end="url(#a)"/>
+    <path d="M670 202 V258" marker-start="url(#a)" marker-end="url(#a)"/>
+    <path d="M1105 202 V258" marker-start="url(#a)" marker-end="url(#a)"/>
+    <path d="M427 396 H492" marker-start="url(#a)" marker-end="url(#a)"/>
+    <path d="M852 396 H917" marker-end="url(#a)"/>
+    <path d="M672 590 V642" marker-start="url(#a)" marker-end="url(#a)"/>
+  </g>
+</svg>
+</body></html>
